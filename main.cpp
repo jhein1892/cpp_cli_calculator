@@ -5,77 +5,109 @@
 class Equation {
 
     public:
-        Equation(std::string input_equation): equation(input_equation), num1(""), num2("") {
-            this->parseEquation();
+        Equation(std::string input_equation): num1(""), num2("") {
+            result = stod(parseEquation(input_equation));
+            // this->parseEquation(input_equation);
         } 
 
-        void printValue(){
-            std::cout << "Your equation is: " << equation << std::endl;
-        }
+        // void printValue(){
+        //     std::cout << "Your equation is: " << equation << std::endl;
+        // }
 
         void printResult(){
-            this->findResult();
             std::cout << "Your result: " << result << std::endl;
         }
 
-        void printEquationDetails(){
-            std::cout << "Num1: " << num1 << " Num2: " << num2 << " Type: " << equation_type << std::endl;
-        }
+        // void printEquationDetails(){
+        //     std::cout << "Num1: " << num1 << " Num2: " << num2 << " Type: " << equation_type << std::endl;
+        // }
 
     private:
-        std::string equation;
+        // std::string equation;
         double result;
         std::string num1, num2; 
         char equation_type;
 
-        void parseEquation(){
+        std::string parseEquation(std::string equation){
+            std::cout << equation << std::endl;
             bool firstNum = true;
+            int openCount = 0;
+            std::string lhNum = "";
+            std::string rhNum = "";
+            std::string subEquation = "";
+            char eq_type;
+
             for(int i = 0; i < equation.size(); i++){
                 if(equation[i] == ' '){
                     firstNum = false;
                     continue;
                 }
+                if(equation[i] == '('){
+                    openCount++;
+                    if(subEquation != ""){
+                        subEquation += equation[i];
+                    }
+                    continue;
+                }
+                if(equation[i] == ')'){
+                    openCount--;
+                }
+                if(openCount > 0){
+                    subEquation += equation[i];
+                    continue;
+                }
+                if(subEquation != "" && openCount == 0){
+                    if(firstNum){
+                        lhNum = parseEquation(subEquation);
+                    } else {
+                        rhNum = parseEquation(subEquation);
+                    }
+                    continue;
+                }
+
                 switch(equation[i]){
                     case('+'):
-                        equation_type = 'a';
+                        eq_type = 'a';
                         firstNum = false;
                         break;
                     case('-'):
-                        equation_type = 's';
+                        eq_type = 's';
                         firstNum = false;
                         break;
                     case('*'):
-                        equation_type = 'm';
+                        eq_type = 'm';
                         firstNum = false;
                         break;
                     case('/'):
-                        equation_type = 'd';
+                        eq_type = 'd';
                         firstNum = false;
                         break;
                     default:
                         if(firstNum){
-                            num1 += equation[i];
+                            lhNum += equation[i];
                         } else {
-                            num2 += equation[i];
+                            rhNum += equation[i];
                         }
                 }
             }
+            return std::to_string(findResult(lhNum, rhNum, eq_type));
         }
 
-        void findResult(){
+        double findResult(std::string lh, std::string rh, char eq_type){
+            double local_result;
             try{
-                switch(equation_type){
+                switch(eq_type){
                     case('a'):
-                        result = stod(num1) + stod(num2);
+                        local_result = stod(lh) + stod(rh);
                         break;
                     case('s'):
-                        result = stod(num1) - stod(num2);
+                        local_result = stod(lh) - stod(rh);
                         break;
                     case('m'):
-                        result = stod(num1) * stod(num2);
+                        local_result = stod(lh) * stod(rh);
                         break;
                     case('d'):
-                        result = stod(num1) / stod(num2);
+                        local_result = stod(lh) / stod(rh);
                         break;
                     default: 
                         break;
@@ -83,6 +115,8 @@ class Equation {
             } catch(std::exception) {
                 std::cout << "Sorry, this equation is not valid" << std::endl;
             }
+
+            return local_result;
         }
 };
 
