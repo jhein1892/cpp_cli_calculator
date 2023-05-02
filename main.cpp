@@ -15,7 +15,7 @@ class Equation {
         double result;
 
         std::string parseEquation(std::string equation){
-            std::cout << equation << std::endl;
+            
             bool firstNum = true;
             int openCount = 0;
             std::string lhNum = "";
@@ -30,22 +30,18 @@ class Equation {
                         subEquation += equation[i];
                     }
                     continue;
-                }
-                if(equation[i] == ')'){
+                } else if(equation[i] == ')'){
                     openCount--;
                 }
 
                 if(openCount > 0){
                     subEquation += equation[i];
                     continue;
-                }
-                if(subEquation != "" && openCount == 0){
+                } else if(subEquation != "" && openCount == 0){
                     if(firstNum){
-                        std::cout << "LH" << std::endl;
                         lhNum = parseEquation(subEquation);
                         firstNum = false; 
                     } else {
-                        std::cout << "RH" << std::endl;
                         rhNum = parseEquation(subEquation);
                     }
                     subEquation = "";
