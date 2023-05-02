@@ -15,6 +15,7 @@ class Equation {
         double result;
 
         std::string parseEquation(std::string equation){
+            std::cout << equation << std::endl;
             bool firstNum = true;
             int openCount = 0;
             std::string lhNum = "";
@@ -23,10 +24,6 @@ class Equation {
             char eq_type;
 
             for(int i = 0; i < equation.size(); i++){
-                if(equation[i] == ' '){
-                    firstNum = false;
-                    continue;
-                }
                 if(equation[i] == '('){
                     openCount++;
                     if(subEquation != ""){
@@ -37,20 +34,29 @@ class Equation {
                 if(equation[i] == ')'){
                     openCount--;
                 }
+
                 if(openCount > 0){
                     subEquation += equation[i];
                     continue;
                 }
                 if(subEquation != "" && openCount == 0){
                     if(firstNum){
+                        std::cout << "LH" << std::endl;
                         lhNum = parseEquation(subEquation);
+                        firstNum = false; 
                     } else {
+                        std::cout << "RH" << std::endl;
                         rhNum = parseEquation(subEquation);
                     }
+                    subEquation = "";
                     continue;
                 }
+                
 
                 switch(equation[i]){
+                    case(' '):
+                        firstNum = false;
+                        break;
                     case('+'):
                         eq_type = 'a';
                         firstNum = false;
@@ -74,6 +80,8 @@ class Equation {
                             rhNum += equation[i];
                         }
                 }
+
+                
             }
             return std::to_string(findResult(lhNum, rhNum, eq_type));
         }
