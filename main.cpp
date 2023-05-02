@@ -5,31 +5,16 @@
 class Equation {
 
     public:
-        Equation(std::string input_equation): num1(""), num2("") {
-            result = stod(parseEquation(input_equation));
-            // this->parseEquation(input_equation);
-        } 
-
-        // void printValue(){
-        //     std::cout << "Your equation is: " << equation << std::endl;
-        // }
+        Equation(std::string input_equation): result(stod(parseEquation(input_equation))){} 
 
         void printResult(){
             std::cout << "Your result: " << result << std::endl;
         }
 
-        // void printEquationDetails(){
-        //     std::cout << "Num1: " << num1 << " Num2: " << num2 << " Type: " << equation_type << std::endl;
-        // }
-
     private:
-        // std::string equation;
         double result;
-        std::string num1, num2; 
-        char equation_type;
 
         std::string parseEquation(std::string equation){
-            std::cout << equation << std::endl;
             bool firstNum = true;
             int openCount = 0;
             std::string lhNum = "";
